@@ -1400,11 +1400,40 @@ button.text-link {
 
   .space-card,
   .space-card:nth-child(even) {
+    position: relative;
     grid-template-columns: 1fr;
+    isolation: isolate;
+    overflow: hidden;
   }
 
   .space-card:nth-child(even) img {
     order: 0;
+  }
+
+  .space-card img {
+    min-height: 460px;
+  }
+
+  // On stacked layouts the copy sits over the lower edge of the photograph,
+  // on a soft ink gradient, so the image stays full bleed and the type stays legible.
+  .space-card > div {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 1;
+    padding: 110px 24px 30px;
+    background: linear-gradient(180deg, transparent, rgba(12, 15, 10, 0.5) 34%, rgba(12, 15, 10, 0.88));
+  }
+
+  .space-card span {
+    color: rgba(251, 250, 249, 0.72);
+  }
+
+  .space-card h3 {
+    color: var(--ivory);
+  }
+
+  .space-card p {
+    color: rgba(251, 250, 249, 0.88);
   }
 
   .events figure {
@@ -1642,11 +1671,16 @@ button.text-link {
   }
 
   .space-card img {
-    min-height: 300px;
+    min-height: 430px;
   }
 
-  .space-card div {
-    padding: 32px 24px 38px;
+  .space-card > div {
+    padding: 96px 20px 26px;
+  }
+
+  .space-card h3 {
+    margin: 14px 0 12px;
+    font-size: clamp(2.3rem, 9vw, 3.2rem);
   }
 
   .events {
