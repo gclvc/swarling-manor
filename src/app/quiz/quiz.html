@@ -19,7 +19,7 @@
       <span [style.width.%]="((stepIndex() + 1) / steps().length) * 100"></span>
     </div>
 
-    <div class="quiz-body" [class.is-result]="currentStep() === 'result'">
+    <div class="quiz-body" [class.is-full]="currentStep() === 'result' || currentStep() === 'showcase'">
       @if (currentStep() !== 'result' && currentStep() !== 'showcase') {
         <figure class="quiz-visual" aria-hidden="true">
           @if (currentStep() === 'occasion' && !reduceMotion) {

@@ -107,8 +107,9 @@
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
 }
 
-.quiz-body.is-result {
+.quiz-body.is-full {
   grid-template-columns: 1fr;
+  grid-template-rows: minmax(0, 1fr);
 }
 
 .quiz-visual {
@@ -705,7 +706,7 @@
     grid-template-rows: clamp(130px, 20dvh, 200px) minmax(0, 1fr);
   }
 
-  .quiz-body.is-result {
+  .quiz-body.is-full {
     grid-template-rows: minmax(0, 1fr);
   }
 
