@@ -187,7 +187,9 @@ export class App implements AfterViewInit, OnDestroy {
           }
         }
       },
-      { rootMargin: '0px 0px -10% 0px', threshold: 0.05 },
+      // threshold must be 0: the marquee rails are tens of thousands of px wide,
+      // so no fixed fraction of them can ever be on screen at once.
+      { rootMargin: '0px 0px -10% 0px', threshold: 0 },
     );
 
     for (const target of targets) {
