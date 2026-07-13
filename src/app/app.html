@@ -83,16 +83,16 @@
 
   <section class="live-feature" aria-labelledby="live-title">
     <div class="live-copy">
-      <p class="eyebrow" data-reveal>Live now - July 12, 2026</p>
-      <h2 id="live-title" data-reveal style="--reveal-delay: 100ms">Family event, captured on the day.</h2>
+      <p class="eyebrow" data-reveal>The estate on film</p>
+      <h2 id="live-title" data-reveal style="--reveal-delay: 100ms">See the day the way your guests will.</h2>
       <p data-reveal style="--reveal-delay: 200ms">
-        A fresh vertical film from the July 12 family event at Swarling Manor: guests arriving, garden conversations,
-        food, sunshine and the estate working as one relaxed setting.
+        Gardens, marquee, barn and Coach Cottage, all within a few steps of each other. Watch the film, then answer a
+        few questions and leave with a guide price for your date.
       </p>
-      <a class="button dark-button" data-reveal style="--reveal-delay: 300ms" href="https://youtube.com/shorts/pLz7M_7jWGg?feature=share" target="_blank" rel="noopener">Watch on YouTube</a>
+      <button type="button" class="button dark-button" data-reveal style="--reveal-delay: 300ms" (click)="openQuiz()">Plan your day</button>
     </div>
 
-    <figure class="phone-reel" aria-label="Vertical film from the July 12, 2026 event" data-reveal="right" style="--reveal-delay: 180ms">
+    <figure class="phone-reel" aria-label="Film of a celebration at Swarling Manor" data-reveal="right" style="--reveal-delay: 180ms">
       <div class="phone-shell">
         <span class="phone-speaker" aria-hidden="true"></span>
         <video #motionVideo autoplay muted loop playsinline preload="metadata" poster="/media/video/swarling-vertical-poster.webp">
@@ -103,15 +103,15 @@
 
     <div class="original-film">
       <div class="original-film-copy" data-reveal>
-        <p class="eyebrow">The original video</p>
-        <h3>Film from the day.</h3>
+        <p class="eyebrow">The grounds</p>
+        <h3>Eighty acres, one address.</h3>
         <p>
-          This preview uses the cinematic hero film. With production time, this space can hold a dedicated YouTube edit
-          created with Swarling Manor as the venue partner.
+          Ceremony, wedding breakfast and the evening party all happen here, with no cars between venues and no
+          timings that depend on traffic. The whole celebration stays in one private setting.
         </p>
       </div>
 
-      <figure class="horizontal-film" aria-label="Horizontal cinematic film from the July 12, 2026 event" data-reveal="zoom" style="--reveal-delay: 150ms">
+      <figure class="horizontal-film" aria-label="Cinematic film of the Swarling Manor estate" data-reveal="zoom" style="--reveal-delay: 150ms">
         <video #motionVideo autoplay muted loop playsinline preload="metadata" poster="/media/video/swarling-horizontal-poster.webp">
           <source src="/media/video/swarling-horizontal.mp4" type="video/mp4" />
         </video>
@@ -159,7 +159,7 @@
   <section class="live-shots" id="gallery" aria-labelledby="live-shots-title" [class.is-paused]="photoMotionPaused()">
     <div class="live-shots-heading">
       <div>
-        <p class="eyebrow" data-reveal>Live shots from July 12</p>
+        <p class="eyebrow" data-reveal>The estate in photographs</p>
         <h2 id="live-shots-title" data-reveal style="--reveal-delay: 110ms">The day, then the place around it.</h2>
       </div>
       <button type="button" class="motion-toggle" [attr.aria-pressed]="photoMotionPaused()" (click)="togglePhotoMotion()">
@@ -171,10 +171,10 @@
     <div class="shot-row">
       <div class="shot-row-heading" data-reveal>
         <span>01</span>
-        <h3>Event</h3>
-        <p>People, tables, food and summer movement from the family event.</p>
+        <h3>The day</h3>
+        <p>People, tables, food and summer movement through the gardens.</p>
       </div>
-      <div class="shot-rail rail-forward" data-reveal="fade" style="--reveal-delay: 150ms" aria-label="Family event photographs from July 12, 2026">
+      <div class="shot-rail rail-forward" data-reveal="fade" style="--reveal-delay: 150ms" aria-label="Photographs of celebrations at Swarling Manor">
         <div class="shot-set">
           @for (photo of eventPhotos; track photo.src) {
             <figure>
@@ -257,14 +257,14 @@
   </section>
 
   <section class="testimonial" aria-labelledby="testimonial-title">
-    <p class="eyebrow" data-reveal>From the current site</p>
-    <h2 id="testimonial-title" data-reveal style="--reveal-delay: 110ms">A review should feel like a real hand on the shoulder, not a wall of text.</h2>
+    <p class="eyebrow" data-reveal>Kind words</p>
+    <h2 id="testimonial-title" data-reveal style="--reveal-delay: 110ms">Beautiful, calm and cared for.</h2>
     <blockquote data-reveal style="--reveal-delay: 240ms">
       <p>
         Summer Mcaulay describes a January wedding brought forward at short notice, with Lois and the team helping the
         day still feel beautiful, calm and cared for.
       </p>
-      <cite>Review summary from Swarling Manor's current website</cite>
+      <cite>Review summary, swarlingmanor.com</cite>
     </blockquote>
   </section>
 
@@ -303,3 +303,10 @@
 </footer>
 
 <app-quiz [open]="quizOpen()" (closed)="onQuizClosed()" />
+
+@if (!quizOpen()) {
+  <button type="button" class="quiz-bubble" (click)="openQuiz()" aria-label="Start planning your day and get a guide price">
+    <span class="quiz-bubble-dot" aria-hidden="true"></span>
+    Start now
+  </button>
+}

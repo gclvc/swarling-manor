@@ -97,7 +97,7 @@ const eventPhotoOrder = [
 
 const eventPhotos = eventPhotoOrder.map((photoNumber, index) => ({
   src: `/media/white-bloom/event/event-${String(photoNumber).padStart(2, '0')}.webp`,
-  alt: `Family event photograph ${index + 1} at Swarling Manor on July 12, 2026`,
+  alt: `Celebration photograph ${index + 1} at Swarling Manor`,
 }));
 
 const venuePhotos = Array.from({ length: 24 }, (_, index) => ({
