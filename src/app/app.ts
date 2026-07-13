@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, QueryList, ViewChild, ViewChildren, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, QueryList, ViewChild, ViewChildren, signal } from '@angular/core';
 
 interface NavGroup {
   label: string;
@@ -109,18 +109,23 @@ const venuePhotos = Array.from({ length: 24 }, (_, index) => ({
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App implements AfterViewInit {
+export class App implements AfterViewInit, OnDestroy {
   @ViewChild('heroVideo') private heroVideo?: ElementRef<HTMLVideoElement>;
   @ViewChildren('motionVideo') private motionVideos?: QueryList<ElementRef<HTMLVideoElement>>;
 
   protected readonly menuOpen = signal(false);
   protected readonly activeDropdown = signal<string | null>(null);
   protected readonly photoMotionPaused = signal(false);
+  protected readonly headerScrolled = signal(false);
   protected readonly navGroups = navGroups;
   protected readonly occasionCards = occasionCards;
   protected readonly spaces = spaces;
   protected readonly eventPhotos = eventPhotos;
   protected readonly venuePhotos = venuePhotos;
+
+  private revealObserver?: IntersectionObserver;
+
+  constructor(private readonly host: ElementRef<HTMLElement>) {}
 
   ngAfterViewInit(): void {
     const reduceMotion = typeof window !== 'undefined'
@@ -147,16 +152,59 @@ export class App implements AfterViewInit {
         }
       }
     }
+
+    this.setUpReveals(reduceMotion);
+  }
+
+  ngOnDestroy(): void {
+    this.revealObserver?.disconnect();
+    this.setBodyScrollLock(false);
+  }
+
+  private setUpReveals(reduceMotion: boolean): void {
+    const targets = Array.from(this.host.nativeElement.querySelectorAll<HTMLElement>('[data-reveal]'));
+
+    if (reduceMotion || typeof IntersectionObserver === 'undefined') {
+      for (const target of targets) {
+        target.classList.add('is-visible');
+      }
+      return;
+    }
+
+    this.revealObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            this.revealObserver?.unobserve(entry.target);
+          }
+        }
+      },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0.05 },
+    );
+
+    for (const target of targets) {
+      this.revealObserver.observe(target);
+    }
+  }
+
+  private setBodyScrollLock(locked: boolean): void {
+    if (typeof document === 'undefined') {
+      return;
+    }
+    document.body.style.overflow = locked ? 'hidden' : '';
   }
 
   protected toggleMenu(): void {
     this.menuOpen.update((open) => !open);
     this.activeDropdown.set(null);
+    this.setBodyScrollLock(this.menuOpen());
   }
 
   protected closeMenu(): void {
     this.menuOpen.set(false);
     this.activeDropdown.set(null);
+    this.setBodyScrollLock(false);
   }
 
   protected toggleDropdown(label: string): void {
@@ -169,6 +217,25 @@ export class App implements AfterViewInit {
 
   protected togglePhotoMotion(): void {
     this.photoMotionPaused.update((paused) => !paused);
+  }
+
+  @HostListener('window:scroll')
+  protected onScroll(): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    this.headerScrolled.set(window.scrollY > 24);
+  }
+
+  @HostListener('document:click', ['$event'])
+  protected onDocumentClick(event: Event): void {
+    if (this.activeDropdown() === null || this.menuOpen()) {
+      return;
+    }
+    const target = event.target as HTMLElement | null;
+    if (target && !target.closest('.nav-dropdown')) {
+      this.closeDropdown();
+    }
   }
 
   @HostListener('document:keydown.escape')

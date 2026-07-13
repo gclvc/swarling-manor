@@ -1,4 +1,4 @@
-<header class="site-header" [class.menu-is-open]="menuOpen()">
+<header class="site-header" [class.menu-is-open]="menuOpen()" [class.is-scrolled]="headerScrolled()">
   <a class="brand" href="#top" aria-label="Swarling Manor home" (click)="closeMenu()">
     <img src="/media/brand/swarling-manor-white.png" alt="Swarling Manor" />
   </a>
@@ -24,7 +24,6 @@
             [attr.aria-expanded]="activeDropdown() === group.label"
             aria-haspopup="true"
             (click)="toggleDropdown(group.label)"
-            (focus)="toggleDropdown(group.label)"
           >
             {{ group.label }}
             <span aria-hidden="true"></span>
@@ -60,23 +59,23 @@
     <div class="hero-shade"></div>
 
     <div class="hero-copy">
-      <p class="eyebrow light">Wedding and events venue in Canterbury, Kent</p>
+      <p class="eyebrow light" data-reveal>Wedding and events venue in Canterbury, Kent</p>
       <h1 id="hero-title">
-        <span>A countryside</span>
-        <span>estate for the</span>
-        <span>whole celebration.</span>
+        <span data-reveal style="--reveal-delay: 90ms">A countryside</span>
+        <span data-reveal style="--reveal-delay: 190ms">estate for the</span>
+        <span data-reveal style="--reveal-delay: 290ms">whole celebration.</span>
       </h1>
-      <p>
+      <p data-reveal style="--reveal-delay: 420ms">
         Swarling Manor brings landscaped gardens, a fairy-lit barn, a connected marquee and Coach Cottage into one
         private setting across an 80-acre estate.
       </p>
-      <div class="hero-actions">
+      <div class="hero-actions" data-reveal style="--reveal-delay: 540ms">
         <a class="button light-button" href="#quote">Book a tour</a>
         <a class="text-link light-link" href="#brochure">Download the brochure</a>
       </div>
     </div>
 
-    <aside class="hero-card" aria-label="Venue summary">
+    <aside class="hero-card" aria-label="Venue summary" data-reveal="right" style="--reveal-delay: 660ms">
       <span>Canterbury, Kent</span>
       <strong>Gardens, barn, marquee and cottage in one estate setting.</strong>
     </aside>
@@ -84,16 +83,16 @@
 
   <section class="live-feature" aria-labelledby="live-title">
     <div class="live-copy">
-      <p class="eyebrow">Live now - July 12, 2026</p>
-      <h2 id="live-title">Family event, captured on the day.</h2>
-      <p>
+      <p class="eyebrow" data-reveal>Live now - July 12, 2026</p>
+      <h2 id="live-title" data-reveal style="--reveal-delay: 100ms">Family event, captured on the day.</h2>
+      <p data-reveal style="--reveal-delay: 200ms">
         A fresh vertical film from the July 12 family event at Swarling Manor: guests arriving, garden conversations,
         food, sunshine and the estate working as one relaxed setting.
       </p>
-      <a class="button dark-button" href="https://youtube.com/shorts/pLz7M_7jWGg?feature=share" target="_blank" rel="noopener">Watch on YouTube</a>
+      <a class="button dark-button" data-reveal style="--reveal-delay: 300ms" href="https://youtube.com/shorts/pLz7M_7jWGg?feature=share" target="_blank" rel="noopener">Watch on YouTube</a>
     </div>
 
-    <figure class="phone-reel" aria-label="Vertical film from the July 12, 2026 event">
+    <figure class="phone-reel" aria-label="Vertical film from the July 12, 2026 event" data-reveal="right" style="--reveal-delay: 180ms">
       <div class="phone-shell">
         <span class="phone-speaker" aria-hidden="true"></span>
         <video #motionVideo autoplay muted loop playsinline preload="metadata" poster="/media/video/swarling-vertical-poster.webp">
@@ -103,7 +102,7 @@
     </figure>
 
     <div class="original-film">
-      <div class="original-film-copy">
+      <div class="original-film-copy" data-reveal>
         <p class="eyebrow">The original video</p>
         <h3>Film from the day.</h3>
         <p>
@@ -112,7 +111,7 @@
         </p>
       </div>
 
-      <figure class="horizontal-film" aria-label="Horizontal cinematic film from the July 12, 2026 event">
+      <figure class="horizontal-film" aria-label="Horizontal cinematic film from the July 12, 2026 event" data-reveal="zoom" style="--reveal-delay: 150ms">
         <video #motionVideo autoplay muted loop playsinline preload="metadata" poster="/media/video/swarling-horizontal-poster.webp">
           <source src="/media/video/swarling-horizontal.mp4" type="video/mp4" />
         </video>
@@ -121,12 +120,12 @@
   </section>
 
   <section class="intro" id="estate" aria-labelledby="intro-title">
-    <div class="section-index" aria-hidden="true">01</div>
+    <div class="section-index" aria-hidden="true" data-reveal="fade">01</div>
     <div>
-      <p class="eyebrow">The estate</p>
-      <h2 id="intro-title">The day can move without leaving the grounds.</h2>
+      <p class="eyebrow" data-reveal>The estate</p>
+      <h2 id="intro-title" data-reveal style="--reveal-delay: 120ms">The day can move without leaving the grounds.</h2>
     </div>
-    <p>
+    <p data-reveal style="--reveal-delay: 260ms">
       Ceremonies can be held indoors or outside, with the Manor House, lawns, barn and marquee connected around the
       same arrival. It gives couples room to shape the day without losing the calm of one place.
     </p>
@@ -134,7 +133,7 @@
 
   <section class="occasion-grid" aria-label="Occasions hosted at Swarling Manor">
     @for (card of occasionCards; track card.title) {
-      <a class="occasion-card" [href]="card.href">
+      <a class="occasion-card" [href]="card.href" data-reveal [style.--reveal-delay]="$index * 120 + 'ms'">
         <img [src]="card.image" [alt]="card.alt" loading="lazy" />
         <span>{{ card.title }}</span>
         <p>{{ card.body }}</p>
@@ -144,14 +143,14 @@
 
   <section class="brochure-band" id="brochure" aria-labelledby="brochure-title">
     <div class="brochure-copy">
-      <p class="eyebrow light">Start with the shape of the day</p>
-      <h2 id="brochure-title">See the venue, then build the celebration around it.</h2>
-      <p>
+      <p class="eyebrow light" data-reveal>Start with the shape of the day</p>
+      <h2 id="brochure-title" data-reveal style="--reveal-delay: 110ms">See the venue, then build the celebration around it.</h2>
+      <p data-reveal style="--reveal-delay: 220ms">
         Download the wedding brochure for package details, ceremony options and planning notes, or ask the team for a
         tour if you are ready to see the estate in person.
       </p>
     </div>
-    <div class="brochure-actions">
+    <div class="brochure-actions" data-reveal style="--reveal-delay: 330ms">
       <a class="button light-button" href="https://www.swarlingmanor.com/weddings" target="_blank" rel="noopener">Open brochure page</a>
       <a class="text-link light-link" href="#quote">Ask for a quote</a>
     </div>
@@ -160,8 +159,8 @@
   <section class="live-shots" id="gallery" aria-labelledby="live-shots-title" [class.is-paused]="photoMotionPaused()">
     <div class="live-shots-heading">
       <div>
-        <p class="eyebrow">Live shots from July 12</p>
-        <h2 id="live-shots-title">The day, then the place around it.</h2>
+        <p class="eyebrow" data-reveal>Live shots from July 12</p>
+        <h2 id="live-shots-title" data-reveal style="--reveal-delay: 110ms">The day, then the place around it.</h2>
       </div>
       <button type="button" class="motion-toggle" [attr.aria-pressed]="photoMotionPaused()" (click)="togglePhotoMotion()">
         <span aria-hidden="true">{{ photoMotionPaused() ? 'Play' : 'Pause' }}</span>
@@ -170,12 +169,12 @@
     </div>
 
     <div class="shot-row">
-      <div class="shot-row-heading">
+      <div class="shot-row-heading" data-reveal>
         <span>01</span>
         <h3>Event</h3>
         <p>People, tables, food and summer movement from the family event.</p>
       </div>
-      <div class="shot-rail rail-forward" aria-label="Family event photographs from July 12, 2026">
+      <div class="shot-rail rail-forward" data-reveal="fade" style="--reveal-delay: 150ms" aria-label="Family event photographs from July 12, 2026">
         <div class="shot-set">
           @for (photo of eventPhotos; track photo.src) {
             <figure>
@@ -194,12 +193,12 @@
     </div>
 
     <div class="shot-row venue-row">
-      <div class="shot-row-heading">
+      <div class="shot-row-heading" data-reveal>
         <span>02</span>
         <h3>The venue</h3>
         <p>The marquee, gardens, house, lanes and fields that hold the event.</p>
       </div>
-      <div class="shot-rail rail-reverse" aria-label="Swarling Manor venue photographs">
+      <div class="shot-rail rail-reverse" data-reveal="fade" style="--reveal-delay: 150ms" aria-label="Swarling Manor venue photographs">
         <div class="shot-set">
           @for (photo of venuePhotos; track photo.src) {
             <figure>
@@ -220,9 +219,9 @@
 
   <section class="spaces" id="spaces" aria-labelledby="spaces-title">
     <div class="spaces-heading">
-      <p class="eyebrow">Ceremony, breakfast, party</p>
-      <h2 id="spaces-title">Four settings, one flow.</h2>
-      <p>
+      <p class="eyebrow" data-reveal>Ceremony, breakfast, party</p>
+      <h2 id="spaces-title" data-reveal style="--reveal-delay: 110ms">Four settings, one flow.</h2>
+      <p data-reveal style="--reveal-delay: 220ms">
         Move from vows to photographs, speeches and the evening party without sending guests from one venue to another.
         The estate gives each part of the day its own setting.
       </p>
@@ -230,7 +229,7 @@
 
     <div class="space-list">
       @for (space of spaces; track space.title) {
-        <article class="space-card">
+        <article class="space-card" [attr.data-reveal]="$index % 2 === 0 ? 'left' : 'right'">
           <img [src]="space.image" [alt]="space.alt" loading="lazy" />
           <div>
             <span>{{ $index + 1 < 10 ? '0' + ($index + 1) : $index + 1 }}</span>
@@ -243,24 +242,24 @@
   </section>
 
   <section class="events" id="events" aria-labelledby="events-title">
-    <figure>
+    <figure data-reveal="zoom">
       <img src="/media/white-bloom/event/event-27.webp" alt="Outdoor event tables beneath parasols at Swarling Manor" loading="lazy" />
     </figure>
     <div class="events-copy">
-      <p class="eyebrow">Beyond weddings</p>
-      <h2 id="events-title">Parties, retreats and company gatherings with countryside around them.</h2>
-      <p>
+      <p class="eyebrow" data-reveal>Beyond weddings</p>
+      <h2 id="events-title" data-reveal style="--reveal-delay: 110ms">Parties, retreats and company gatherings with countryside around them.</h2>
+      <p data-reveal style="--reveal-delay: 220ms">
         From milestone parties to work gatherings, Swarling Manor gives guests a private rural setting with indoor and
         outdoor spaces close together.
       </p>
-      <a class="button dark-button" href="#quote">Send event details</a>
+      <a class="button dark-button" data-reveal style="--reveal-delay: 330ms" href="#quote">Send event details</a>
     </div>
   </section>
 
   <section class="testimonial" aria-labelledby="testimonial-title">
-    <p class="eyebrow">From the current site</p>
-    <h2 id="testimonial-title">A review should feel like a real hand on the shoulder, not a wall of text.</h2>
-    <blockquote>
+    <p class="eyebrow" data-reveal>From the current site</p>
+    <h2 id="testimonial-title" data-reveal style="--reveal-delay: 110ms">A review should feel like a real hand on the shoulder, not a wall of text.</h2>
+    <blockquote data-reveal style="--reveal-delay: 240ms">
       <p>
         Summer Mcaulay describes a January wedding brought forward at short notice, with Lois and the team helping the
         day still feel beautiful, calm and cared for.
@@ -273,10 +272,10 @@
     <img src="/media/white-bloom/venue/venue-24.webp" alt="Pond and field view at Swarling Manor" loading="lazy" />
     <div class="quote-shade"></div>
     <div class="quote-copy">
-      <p class="eyebrow light">Ready to see it in person?</p>
-      <h2 id="quote-title">Book a tour of Swarling Manor.</h2>
-      <p>Tell the team what you are planning and ask for availability, pricing or a visit to the grounds.</p>
-      <div class="quote-actions">
+      <p class="eyebrow light" data-reveal>Ready to see it in person?</p>
+      <h2 id="quote-title" data-reveal style="--reveal-delay: 110ms">Book a tour of Swarling Manor.</h2>
+      <p data-reveal style="--reveal-delay: 220ms">Tell the team what you are planning and ask for availability, pricing or a visit to the grounds.</p>
+      <div class="quote-actions" data-reveal style="--reveal-delay: 330ms">
         <a class="button light-button" href="mailto:hello@swarlingmanor.com?subject=Swarling%20Manor%20tour%20request">Email the team</a>
         <a class="text-link light-link" href="tel:+447850974748">Call 07850 974748</a>
       </div>
@@ -285,7 +284,7 @@
 </main>
 
 <footer class="site-footer" id="contact">
-  <div class="footer-main">
+  <div class="footer-main" data-reveal="fade">
     <a class="footer-brand" href="#top" aria-label="Swarling Manor back to top">
       <img src="/media/brand/swarling-manor-white.png" alt="Swarling Manor" />
     </a>
