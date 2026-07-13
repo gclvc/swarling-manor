@@ -42,22 +42,22 @@ const occasionCards: ImageCard[] = [
   {
     title: 'Weddings',
     body: 'Garden ceremonies, marquee dining and an evening party that can stay close to the estate.',
-    image: '/media/white-bloom/venue/venue-01.webp',
-    alt: 'Marquee wedding breakfast space prepared at Swarling Manor',
+    image: '/media/estate/weddings-confetti.webp',
+    alt: 'Newlyweds walking through a confetti shower at Swarling Manor',
     href: '#spaces',
   },
   {
     title: 'Events',
     body: 'Summer tables, drinks, food stations and guests moving through the gardens.',
-    image: '/media/white-bloom/event/event-27.webp',
-    alt: 'Outdoor event tables and parasols at Swarling Manor',
+    image: '/media/estate/marquee-night.webp',
+    alt: 'The marquee glowing at night across the lawn at Swarling Manor',
     href: '#events',
   },
   {
     title: 'Stay',
     body: 'Coach Cottage gives couples a quiet base for preparations and the wedding night.',
-    image: '/media/white-bloom/venue/venue-09.webp',
-    alt: 'Front of the manor house at Swarling Manor',
+    image: '/media/estate/coach-cottage.webp',
+    alt: 'Coach Cottage at Swarling Manor with guests at the door',
     href: '#contact',
   },
 ];
@@ -66,26 +66,26 @@ const spaces = [
   {
     title: 'The Gazebo',
     body: 'A garden ceremony point framed by lawn, trees and open Kent countryside.',
-    image: '/media/white-bloom/venue/venue-07.webp',
-    alt: 'Garden aisle steps and hedging at Swarling Manor',
+    image: '/media/estate/gazebo-ceremony.webp',
+    alt: 'Wedding ceremony under the gazebo at Swarling Manor',
   },
   {
     title: 'The Marquee',
     body: 'A dressed, connected space for the wedding breakfast and speeches.',
-    image: '/media/white-bloom/venue/venue-01.webp',
-    alt: 'Inside the marquee at Swarling Manor',
+    image: '/media/estate/marquee-interior.webp',
+    alt: 'Wedding breakfast in full swing inside the marquee at Swarling Manor',
   },
   {
     title: 'The Barn',
     body: 'A rustic, fairy-lit place for the evening party when the day changes gear.',
-    image: '/media/white-bloom/venue/venue-02.webp',
-    alt: 'Barn interior with warm hanging lights at Swarling Manor',
+    image: '/media/estate/barn-fairylit.webp',
+    alt: 'Fairy-lit barn dressed for a ceremony at Swarling Manor',
   },
   {
     title: 'The Grounds',
     body: 'Lawns, landscaped gardens and field edges for portraits, arrivals and slow moments.',
-    image: '/media/white-bloom/venue/venue-17.webp',
-    alt: 'Open field and countryside view at Swarling Manor',
+    image: '/media/estate/estate-aerial.webp',
+    alt: 'Aerial view of the gardens, marquee and fields at Swarling Manor',
   },
 ];
 

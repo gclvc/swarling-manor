@@ -118,6 +118,17 @@
   backdrop-filter: blur(18px);
 }
 
+// Invisible hover bridge over the gap between the trigger and the menu, so
+// the pointer never leaves .nav-dropdown while travelling into the menu.
+.dropdown-menu::before {
+  position: absolute;
+  top: -14px;
+  right: -28px;
+  left: -28px;
+  height: 14px;
+  content: '';
+}
+
 .nav-dropdown:hover .dropdown-menu,
 .nav-dropdown.is-open .dropdown-menu {
   display: grid;
@@ -622,9 +633,10 @@
   position: relative;
   z-index: 1;
   margin-top: clamp(96px, 12vw, 168px);
+  padding: clamp(64px, 8vw, 104px) 0 clamp(72px, 9vw, 120px);
   overflow: hidden;
   isolation: isolate;
-  background: var(--paper);
+  background: var(--sage);
 }
 
 .live-shots-heading {
@@ -1200,6 +1212,10 @@
     letter-spacing: 0;
     line-height: 1;
     text-transform: none;
+  }
+
+  .dropdown-menu::before {
+    display: none;
   }
 
   .dropdown-menu {

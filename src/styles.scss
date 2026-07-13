@@ -1,16 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap');
 
 :root {
-  --ink: #141414;
-  --ivory: #ffffff;
-  --paper: #ffffff;
-  --chalk: #f1f1f1;
-  --plum: #5f5f5f;
-  --rose: #767676;
-  --brass: #9a9a9a;
-  --leaf: #4d4d4d;
-  --muted: #666666;
-  --line: rgba(20, 20, 20, 0.14);
+  --ink: #21231c;
+  --ivory: #fbfaf9;
+  --paper: #fbfaf9;
+  --chalk: #e9ebe1;
+  --sage: #c9cdc0;
+  --plum: #0c4426;
+  --rose: #4e5741;
+  --brass: #9da28e;
+  --leaf: #0c4426;
+  --muted: #4f5447;
+  --line: rgba(33, 35, 28, 0.16);
   --content: min(1320px, calc(100vw - 48px));
   --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   --font-sans: 'Manrope', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
