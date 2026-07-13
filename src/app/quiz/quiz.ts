@@ -33,10 +33,10 @@ interface EstimateLine {
 }
 
 const OCCASION_OPTIONS: CardOption[] = [
-  { value: 'wedding', label: 'A wedding', sub: 'The full day, ceremony to last dance' },
-  { value: 'twilight', label: 'A twilight wedding', sub: 'A shorter day, beginning mid afternoon' },
-  { value: 'party', label: 'A party', sub: 'Birthdays, anniversaries, New Year, Christmas' },
-  { value: 'corporate', label: 'Corporate or retreat', sub: 'Away days, gatherings, quiet thinking space' },
+  { value: 'wedding', label: 'A wedding', sub: 'The full day, ceremony to last dance', image: '/media/estate/weddings-confetti.webp' },
+  { value: 'twilight', label: 'A twilight wedding', sub: 'A shorter day, beginning mid afternoon', image: '/media/estate/festoon-courtyard.webp' },
+  { value: 'party', label: 'A party', sub: 'Birthdays, anniversaries, New Year, Christmas', image: '/media/estate/barn-band.webp' },
+  { value: 'corporate', label: 'Corporate or retreat', sub: 'Away days, gatherings, quiet thinking space', image: '/media/estate/manor-lawn.webp' },
 ];
 
 const TIMING_OPTIONS: CardOption[] = [
@@ -64,15 +64,15 @@ const CEREMONY_OPTIONS: CardOption[] = [
 ];
 
 const FOOD_OPTIONS: CardOption[] = [
-  { value: 'breakfast', label: 'Three course wedding breakfast', sub: 'Seated, in the marquee. £55 a head' },
-  { value: 'bbq', label: 'BBQ or hog roast', sub: 'Relaxed, in place of the breakfast. £35 a head' },
-  { value: 'undecided', label: 'Still deciding', sub: 'We will show the classic day as a guide' },
+  { value: 'breakfast', label: 'Three course wedding breakfast', sub: 'Seated, in the marquee. £55 a head', image: '/media/estate/plated-dish.webp' },
+  { value: 'bbq', label: 'BBQ or hog roast', sub: 'Relaxed, in place of the breakfast. £35 a head', image: '/media/white-bloom/event/event-27.webp' },
+  { value: 'undecided', label: 'Still deciding', sub: 'We will show the classic day as a guide', image: '/media/estate/marquee-interior.webp' },
 ];
 
 const DRINKS_OPTIONS: CardOption[] = [
-  { value: 'package', label: 'The drinks package', sub: '£25 a head. Two drinks after the ceremony, wine with the meal, a toast for the speeches' },
-  { value: 'own', label: 'We will arrange our own', sub: 'The team can talk you through options' },
-  { value: 'undecided', label: 'Not sure yet', sub: 'We will include it as a guide' },
+  { value: 'package', label: 'The drinks package', sub: '£25 a head. Two drinks after the ceremony, wine with the meal, a toast for the speeches', image: '/media/estate/champagne.webp' },
+  { value: 'own', label: 'We will arrange our own', sub: 'The team can talk you through options', image: '/media/estate/festoon-courtyard.webp' },
+  { value: 'undecided', label: 'Not sure yet', sub: 'We will include it as a guide', image: '/media/estate/canapes.webp' },
 ];
 
 const STAGE_OPTIONS: CardOption[] = [
@@ -87,7 +87,7 @@ const HEARD_OPTIONS = ['Instagram', 'Google', 'Hitched or Bridebook', 'A recomme
 const STEP_IMAGES: Partial<Record<StepId, string>> = {
   occasion: '/media/estate/manor-aerial.webp',
   timing: '/media/estate/estate-aerial.webp',
-  day: '/media/estate/festoon-courtyard.webp',
+  day: '/media/estate/golden-veil.webp',
   guests: '/media/estate/marquee-interior.webp',
   evening: '/media/estate/barn-band.webp',
   headcount: '/media/estate/barn-band.webp',
@@ -133,6 +133,11 @@ export class Quiz {
   protected readonly extraCanapes = signal(true);
   protected readonly extraDrinks = signal(true);
   protected readonly extraPizzas = signal(true);
+
+  protected readonly reduceMotion =
+    typeof window !== 'undefined' &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   protected readonly occasionOptions = OCCASION_OPTIONS;
   protected readonly timingOptions = TIMING_OPTIONS;
@@ -193,15 +198,7 @@ export class Quiz {
 
   // ----- Estimate -----
 
-  private hireRange(): { low: number; high: number; label: string } {
-    if (this.occasion() === 'twilight') {
-      return { low: TWILIGHT_HIRE, high: TWILIGHT_HIRE, label: 'Twilight venue hire, all year round' };
-    }
-    const timing = this.timing();
-    const tier = this.dayTier();
-    const years = timing && timing !== 'undecided' ? [Number(timing.split('-')[0])] : [2026, 2027, 2028];
-    const seasons: ('summer' | 'offpeak')[] = timing && timing !== 'undecided' ? [timing.split('-')[1] as 'summer' | 'offpeak'] : ['summer', 'offpeak'];
-    const tiers: DayTier[] = tier && tier !== 'flexible' ? [tier as DayTier] : ['midweek', 'frisun', 'sat'];
+  private hireFor(years: number[], seasons: ('summer' | 'offpeak')[], tiers: DayTier[]): { low: number; high: number } {
     let low = Infinity;
     let high = 0;
     for (const y of years) {
@@ -213,6 +210,63 @@ export class Quiz {
         }
       }
     }
+    return { low, high };
+  }
+
+  private timingParts(value: string | null): { years: number[]; seasons: ('summer' | 'offpeak')[] } {
+    if (value && value !== 'undecided') {
+      return { years: [Number(value.split('-')[0])], seasons: [value.split('-')[1] as 'summer' | 'offpeak'] };
+    }
+    return { years: [2026, 2027, 2028], seasons: ['summer', 'offpeak'] };
+  }
+
+  protected timingPrice(value: string): string {
+    if (this.occasion() === 'twilight') {
+      return 'Venue hire £3,500, any date';
+    }
+    const parts = this.timingParts(value);
+    const range = this.hireFor(parts.years, parts.seasons, ['midweek', 'frisun', 'sat']);
+    return `Venue hire ${this.formatMoney(range.low)} to ${this.formatMoney(range.high)}`;
+  }
+
+  protected dayPrice(value: string): string {
+    const parts = this.timingParts(this.timing());
+    const tiers: DayTier[] = value === 'flexible' ? ['midweek', 'frisun', 'sat'] : [value as DayTier];
+    const range = this.hireFor(parts.years, parts.seasons, tiers);
+    return range.low === range.high
+      ? `${this.formatMoney(range.low)} venue hire`
+      : `${this.formatMoney(range.low)} to ${this.formatMoney(range.high)} venue hire`;
+  }
+
+  protected readonly runningTotal = computed<{ label: string } | null>(() => {
+    if (this.isEventPath() || this.timing() === null) return null;
+    const twilight = this.occasion() === 'twilight';
+    const day = Math.min(this.dayGuests(), 60);
+    const evening = twilight ? day : Math.min(this.eveningGuests(), 80);
+    const hire = this.hireRange();
+    const mainRate = this.food() === 'bbq' ? PP.bbq : PP.breakfast;
+    let perPerson = day * mainRate + evening * PP.pizzas;
+    if (!twilight) perPerson += day * PP.canapes;
+    if (this.drinks() !== 'own') perPerson += day * PP.drinks;
+    const low = hire.low + perPerson;
+    const high = hire.high + perPerson;
+    return { label: low === high ? this.formatMoney(low) : `${this.formatMoney(low)} to ${this.formatMoney(high)}` };
+  });
+
+  protected readonly runningBarVisible = computed(() => {
+    const step = this.currentStep();
+    return this.runningTotal() !== null && !['occasion', 'timing', 'result'].includes(step);
+  });
+
+  private hireRange(): { low: number; high: number; label: string } {
+    if (this.occasion() === 'twilight') {
+      return { low: TWILIGHT_HIRE, high: TWILIGHT_HIRE, label: 'Twilight venue hire, all year round' };
+    }
+    const timing = this.timing();
+    const tier = this.dayTier();
+    const parts = this.timingParts(timing);
+    const tiers: DayTier[] = tier && tier !== 'flexible' ? [tier as DayTier] : ['midweek', 'frisun', 'sat'];
+    const { low, high } = this.hireFor(parts.years, parts.seasons, tiers);
     const timingLabel = TIMING_OPTIONS.find((o) => o.value === timing)?.label ?? 'date to be settled';
     const dayLabel = DAY_OPTIONS.find((o) => o.value === tier)?.label ?? 'day to be settled';
     return { low, high, label: `${timingLabel}, ${dayLabel}` };
