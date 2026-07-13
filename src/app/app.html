@@ -38,7 +38,7 @@
         <a [href]="group.href" (click)="closeMenu()">{{ group.label }}</a>
       }
     }
-    <a class="nav-quote" href="#quote" (click)="closeMenu()">Get a quote</a>
+    <button type="button" class="nav-quote" (click)="openQuiz()">Get a quote</button>
   </nav>
 </header>
 
@@ -70,7 +70,7 @@
         private setting across an 80-acre estate.
       </p>
       <div class="hero-actions" data-reveal style="--reveal-delay: 540ms">
-        <a class="button light-button" href="#quote">Book a tour</a>
+        <button type="button" class="button light-button" (click)="openQuiz()">Plan your day</button>
         <a class="text-link light-link" href="#brochure">Download the brochure</a>
       </div>
     </div>
@@ -152,7 +152,7 @@
     </div>
     <div class="brochure-actions" data-reveal style="--reveal-delay: 330ms">
       <a class="button light-button" href="https://www.swarlingmanor.com/weddings" target="_blank" rel="noopener">Open brochure page</a>
-      <a class="text-link light-link" href="#quote">Ask for a quote</a>
+      <button type="button" class="text-link light-link" (click)="openQuiz()">Get a guide price first</button>
     </div>
   </section>
 
@@ -252,7 +252,7 @@
         From milestone parties to work gatherings, Swarling Manor gives guests a private rural setting with indoor and
         outdoor spaces close together.
       </p>
-      <a class="button dark-button" data-reveal style="--reveal-delay: 330ms" href="#quote">Send event details</a>
+      <button type="button" class="button dark-button" data-reveal style="--reveal-delay: 330ms" (click)="openQuiz()">Send event details</button>
     </div>
   </section>
 
@@ -276,7 +276,8 @@
       <h2 id="quote-title" data-reveal style="--reveal-delay: 110ms">Book a tour of Swarling Manor.</h2>
       <p data-reveal style="--reveal-delay: 220ms">Tell the team what you are planning and ask for availability, pricing or a visit to the grounds.</p>
       <div class="quote-actions" data-reveal style="--reveal-delay: 330ms">
-        <a class="button light-button" href="mailto:hello@swarlingmanor.com?subject=Swarling%20Manor%20tour%20request">Email the team</a>
+        <button type="button" class="button light-button" (click)="openQuiz()">Plan your day, get a guide price</button>
+        <a class="text-link light-link" href="mailto:hello@swarlingmanor.com?subject=Swarling%20Manor%20tour%20request">Email the team</a>
         <a class="text-link light-link" href="tel:+447850974748">Call 07850 974748</a>
       </div>
     </div>
@@ -300,3 +301,5 @@
     </div>
   </div>
 </footer>
+
+<app-quiz [open]="quizOpen()" (closed)="onQuizClosed()" />

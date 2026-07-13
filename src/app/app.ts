@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, QueryList, ViewChild, ViewChildren, signal } from '@angular/core';
+import { Quiz } from './quiz/quiz';
 
 interface NavGroup {
   label: string;
@@ -108,6 +109,7 @@ const venuePhotos = Array.from({ length: 24 }, (_, index) => ({
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.scss',
+  imports: [Quiz],
 })
 export class App implements AfterViewInit, OnDestroy {
   @ViewChild('heroVideo') private heroVideo?: ElementRef<HTMLVideoElement>;
@@ -117,6 +119,7 @@ export class App implements AfterViewInit, OnDestroy {
   protected readonly activeDropdown = signal<string | null>(null);
   protected readonly photoMotionPaused = signal(false);
   protected readonly headerScrolled = signal(false);
+  protected readonly quizOpen = signal(false);
   protected readonly navGroups = navGroups;
   protected readonly occasionCards = occasionCards;
   protected readonly spaces = spaces;
@@ -154,6 +157,10 @@ export class App implements AfterViewInit, OnDestroy {
     }
 
     this.setUpReveals(reduceMotion);
+
+    if (typeof window !== 'undefined' && window.location.hash === '#plan') {
+      this.openQuiz();
+    }
   }
 
   ngOnDestroy(): void {
@@ -217,6 +224,17 @@ export class App implements AfterViewInit, OnDestroy {
 
   protected togglePhotoMotion(): void {
     this.photoMotionPaused.update((paused) => !paused);
+  }
+
+  protected openQuiz(): void {
+    this.closeMenu();
+    this.quizOpen.set(true);
+    this.setBodyScrollLock(true);
+  }
+
+  protected onQuizClosed(): void {
+    this.quizOpen.set(false);
+    this.setBodyScrollLock(false);
   }
 
   @HostListener('window:scroll')

@@ -47,6 +47,7 @@
 }
 
 .site-nav > a,
+.site-nav > button,
 .nav-dropdown > button {
   min-height: 44px;
   padding: 0;
@@ -58,6 +59,15 @@
   background: transparent;
   font: inherit;
   text-transform: inherit;
+}
+
+button.text-link {
+  padding: 0 0 7px;
+  border-top: 0;
+  border-right: 0;
+  border-left: 0;
+  background: transparent;
+  font: inherit;
 }
 
 .site-nav > a:not(.nav-quote),
@@ -164,7 +174,7 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
-.nav-quote {
+.site-nav > .nav-quote {
   min-height: 46px;
   padding: 0 19px;
   border: 1px solid rgba(255, 252, 243, 0.48);
@@ -174,8 +184,8 @@
   transition: background 180ms ease, color 180ms ease;
 }
 
-.nav-quote:hover,
-.nav-quote:focus-visible {
+.site-nav > .nav-quote:hover,
+.site-nav > .nav-quote:focus-visible {
   color: var(--ink);
   background: var(--ivory);
 }
@@ -1184,6 +1194,7 @@
   }
 
   .site-nav > a,
+  .site-nav > button,
   .site-nav > .nav-dropdown {
     opacity: 0;
     transform: translateY(22px);
@@ -1191,6 +1202,7 @@
   }
 
   .site-nav.is-open > a,
+  .site-nav.is-open > button,
   .site-nav.is-open > .nav-dropdown {
     opacity: 1;
     transform: none;
@@ -1249,7 +1261,7 @@
     font-family: var(--font-sans);
   }
 
-  .nav-quote {
+  .site-nav > .nav-quote {
     width: max-content;
     min-height: 54px;
     margin-top: 12px;

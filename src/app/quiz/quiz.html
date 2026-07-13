@@ -1,0 +1,400 @@
+@if (isOpen()) {
+  <div class="quiz-overlay" role="dialog" aria-modal="true" aria-label="Plan your day at Swarling Manor">
+    <header class="quiz-top">
+      <span class="quiz-brand">Swarling Manor</span>
+      @if (questionNumber() !== null) {
+        <span class="quiz-progress-label">Step {{ questionNumber() }} of {{ questionSteps().length }}</span>
+      }
+      <button type="button" class="quiz-close" (click)="close()" aria-label="Close and return to the site">
+        <span></span>
+        <span></span>
+      </button>
+    </header>
+
+    <div class="quiz-progress" aria-hidden="true">
+      <span [style.width.%]="((stepIndex() + 1) / steps().length) * 100"></span>
+    </div>
+
+    <div class="quiz-body" [class.is-result]="currentStep() === 'result'">
+      @if (currentStep() !== 'result' && currentStep() !== 'showcase') {
+        <figure class="quiz-visual" aria-hidden="true">
+          <img [src]="stepImage()" alt="" />
+          <div class="quiz-visual-shade"></div>
+        </figure>
+      }
+
+      <div class="quiz-panel">
+        @switch (currentStep()) {
+
+          @case ('occasion') {
+            <section class="q-step" aria-live="polite">
+              <p class="q-eyebrow">The occasion</p>
+              <h2>What are you planning?</h2>
+              <p class="q-helper">Choose the closest fit. Everything can be shaped later.</p>
+              <div class="q-cards">
+                @for (option of occasionOptions; track option.value) {
+                  <button type="button" class="q-card" [class.is-selected]="selectedValue('occasion') === option.value" (click)="pick('occasion', option.value)">
+                    <strong>{{ option.label }}</strong>
+                    <span>{{ option.sub }}</span>
+                  </button>
+                }
+              </div>
+            </section>
+          }
+
+          @case ('timing') {
+            <section class="q-step" aria-live="polite">
+              <p class="q-eyebrow">The date</p>
+              <h2>When do you have in mind?</h2>
+              <p class="q-helper">Guide prices change with the season and the year. Roughly is fine.</p>
+              <div class="q-cards q-cards-compact">
+                @for (option of timingOptions; track option.value) {
+                  <button type="button" class="q-card" [class.is-selected]="selectedValue('timing') === option.value" (click)="pick('timing', option.value)">
+                    <strong>{{ option.label }}</strong>
+                    <span>{{ option.sub }}</span>
+                  </button>
+                }
+              </div>
+              <button type="button" class="q-back" (click)="back()">Back</button>
+            </section>
+          }
+
+          @case ('day') {
+            <section class="q-step" aria-live="polite">
+              <p class="q-eyebrow">The day</p>
+              <h2>Which day of the week?</h2>
+              <p class="q-helper">A Friday or a midweek date in the same season saves £500 to £1,000.</p>
+              <div class="q-cards">
+                @for (option of dayOptions; track option.value) {
+                  <button type="button" class="q-card" [class.is-selected]="selectedValue('day') === option.value" (click)="pick('day', option.value)">
+                    <strong>{{ option.label }}</strong>
+                    <span>{{ option.sub }}</span>
+                  </button>
+                }
+              </div>
+              <button type="button" class="q-back" (click)="back()">Back</button>
+            </section>
+          }
+
+          @case ('showcase') {
+            <section class="q-step q-showcase" aria-live="polite">
+              <p class="q-eyebrow">Swarling Manor</p>
+              <h2>The day can move without leaving the grounds.</h2>
+              <p class="q-helper">
+                Ceremony under the gazebo in the walled gardens. Dinner in the marquee, beneath the chandelier. Dancing
+                in the fairy lit barn. And Coach Cottage for the night before and the night itself. Eighty acres, one
+                address.
+              </p>
+              <div class="q-strip">
+                <img src="/media/estate/gazebo-ceremony.webp" alt="Ceremony under the gazebo at Swarling Manor" loading="lazy" />
+                <img src="/media/estate/marquee-interior.webp" alt="Wedding breakfast inside the marquee" loading="lazy" />
+                <img src="/media/estate/barn-fairylit.webp" alt="The fairy lit barn" loading="lazy" />
+                <img src="/media/estate/coach-cottage.webp" alt="Coach Cottage" loading="lazy" />
+              </div>
+              <div class="q-actions">
+                <button type="button" class="q-primary" (click)="next()">Keep going</button>
+                <button type="button" class="q-back" (click)="back()">Back</button>
+              </div>
+            </section>
+          }
+
+          @case ('guests') {
+            <section class="q-step" aria-live="polite">
+              <p class="q-eyebrow">The guests</p>
+              <h2>{{ occasion() === 'twilight' ? 'How many of you will there be?' : 'How many for the day?' }}</h2>
+              <p class="q-helper">As standard, Swarling seats 60 for the day. Drag to your best guess.</p>
+              <div class="q-slider">
+                <output>{{ dayGuests() }}{{ dayGuests() >= 60 ? '+' : '' }}</output>
+                <input
+                  type="range"
+                  min="20"
+                  max="60"
+                  step="2"
+                  [value]="dayGuests()"
+                  (input)="onDayGuestsInput($event)"
+                  aria-label="Number of day guests"
+                />
+                <div class="q-slider-scale"><span>20</span><span>60</span></div>
+              </div>
+              @if (overCapacityDay()) {
+                <p class="q-note">More than 60? The team will talk through options for larger parties.</p>
+              }
+              <div class="q-actions">
+                <button type="button" class="q-primary" (click)="next()">Continue</button>
+                <button type="button" class="q-back" (click)="back()">Back</button>
+              </div>
+            </section>
+          }
+
+          @case ('evening') {
+            <section class="q-step" aria-live="polite">
+              <p class="q-eyebrow">The evening</p>
+              <h2>And once the barn opens?</h2>
+              <p class="q-helper">Evening guests join for the party. Up to 80 as standard.</p>
+              <div class="q-slider">
+                <output>{{ eveningGuests() }}{{ eveningGuests() >= 80 ? '+' : '' }}</output>
+                <input
+                  type="range"
+                  [min]="dayGuests()"
+                  max="80"
+                  step="2"
+                  [value]="eveningGuests()"
+                  (input)="onEveningGuestsInput($event)"
+                  aria-label="Number of evening guests"
+                />
+                <div class="q-slider-scale"><span>{{ dayGuests() }}</span><span>80</span></div>
+              </div>
+              @if (overCapacityEvening()) {
+                <p class="q-note">Above 80, the team will price the evening personally.</p>
+              }
+              <div class="q-actions">
+                <button type="button" class="q-primary" (click)="next()">Continue</button>
+                <button type="button" class="q-back" (click)="back()">Back</button>
+              </div>
+            </section>
+          }
+
+          @case ('headcount') {
+            <section class="q-step" aria-live="polite">
+              <p class="q-eyebrow">The guests</p>
+              <h2>Roughly how many people?</h2>
+              <p class="q-helper">A best guess is plenty at this stage.</p>
+              <div class="q-slider">
+                <output>{{ headcount() }}{{ headcount() >= 120 ? '+' : '' }}</output>
+                <input
+                  type="range"
+                  min="10"
+                  max="120"
+                  step="5"
+                  [value]="headcount()"
+                  (input)="onHeadcountInput($event)"
+                  aria-label="Approximate number of guests"
+                />
+                <div class="q-slider-scale"><span>10</span><span>120</span></div>
+              </div>
+              <div class="q-actions">
+                <button type="button" class="q-primary" (click)="next()">Continue</button>
+                <button type="button" class="q-back" (click)="back()">Back</button>
+              </div>
+            </section>
+          }
+
+          @case ('ceremony') {
+            <section class="q-step" aria-live="polite">
+              <p class="q-eyebrow">The ceremony</p>
+              <h2>Where would you say your vows?</h2>
+              <p class="q-helper">Outdoor ceremonies take place in the gardens. The practical details come later.</p>
+              <div class="q-cards q-photo-cards">
+                @for (option of ceremonyOptions; track option.value) {
+                  <button type="button" class="q-card q-photo-card" [class.is-selected]="selectedValue('ceremony') === option.value" (click)="pick('ceremony', option.value)">
+                    <img [src]="option.image" [alt]="option.label" loading="lazy" />
+                    <span class="q-photo-copy">
+                      <strong>{{ option.label }}</strong>
+                      <span>{{ option.sub }}</span>
+                    </span>
+                  </button>
+                }
+              </div>
+              <button type="button" class="q-back" (click)="back()">Back</button>
+            </section>
+          }
+
+          @case ('food') {
+            <section class="q-step" aria-live="polite">
+              <p class="q-eyebrow">The food</p>
+              <h2>How would you like to eat?</h2>
+              <p class="q-helper">Prices are per person, from the current brochure.</p>
+              <div class="q-cards">
+                @for (option of foodOptions; track option.value) {
+                  <button type="button" class="q-card" [class.is-selected]="selectedValue('food') === option.value" (click)="pick('food', option.value)">
+                    <strong>{{ option.label }}</strong>
+                    <span>{{ option.sub }}</span>
+                  </button>
+                }
+              </div>
+              <button type="button" class="q-back" (click)="back()">Back</button>
+            </section>
+          }
+
+          @case ('drinks') {
+            <section class="q-step" aria-live="polite">
+              <p class="q-eyebrow">The drinks</p>
+              <h2>And to drink?</h2>
+              <p class="q-helper">One package covers the day. Or keep it open for now.</p>
+              <div class="q-cards">
+                @for (option of drinksOptions; track option.value) {
+                  <button type="button" class="q-card" [class.is-selected]="selectedValue('drinks') === option.value" (click)="pick('drinks', option.value)">
+                    <strong>{{ option.label }}</strong>
+                    <span>{{ option.sub }}</span>
+                  </button>
+                }
+              </div>
+              <button type="button" class="q-back" (click)="back()">Back</button>
+            </section>
+          }
+
+          @case ('stage') {
+            <section class="q-step" aria-live="polite">
+              <p class="q-eyebrow">The search</p>
+              <h2>Where are you in the planning?</h2>
+              <p class="q-helper">There is no wrong answer. It just helps us reply well.</p>
+              <div class="q-cards">
+                @for (option of stageOptions; track option.value) {
+                  <button type="button" class="q-card" [class.is-selected]="selectedValue('stage') === option.value" (click)="pick('stage', option.value)">
+                    <strong>{{ option.label }}</strong>
+                    <span>{{ option.sub }}</span>
+                  </button>
+                }
+              </div>
+              <button type="button" class="q-back" (click)="back()">Back</button>
+            </section>
+          }
+
+          @case ('tease') {
+            <section class="q-step q-showcase" aria-live="polite">
+              <p class="q-eyebrow">Almost done</p>
+              <h2>{{ isEventPath() ? 'Your tailored proposal is nearly ready.' : 'Your guide estimate is ready.' }}</h2>
+              <div class="q-chips">
+                @for (chip of recapChips(); track chip) {
+                  <span>{{ chip }}</span>
+                }
+              </div>
+              <p class="q-helper">
+                {{
+                  isEventPath()
+                    ? 'Tell us where to send it and the team will reply with tailored pricing, usually within one working day.'
+                    : 'The figures come straight from the current brochure, so you know where you stand before anyone picks up the phone.'
+                }}
+              </p>
+              <div class="q-actions">
+                <button type="button" class="q-primary" (click)="next()">
+                  {{ isEventPath() ? 'Nearly there' : 'Show my estimate' }}
+                </button>
+                <button type="button" class="q-back" (click)="back()">Back</button>
+              </div>
+            </section>
+          }
+
+          @case ('contact') {
+            <section class="q-step" aria-live="polite">
+              <p class="q-eyebrow">Your details</p>
+              <h2>Where should {{ isEventPath() ? 'the proposal' : 'the estimate' }} go?</h2>
+              <p class="q-helper">A first name and an email is all we need. Add a phone number if you would rather talk.</p>
+              <form class="q-form" (submit)="submitContact($event)" novalidate>
+                <label>
+                  <span>First name(s)</span>
+                  <input type="text" name="name" autocomplete="name" placeholder="Emma &amp; Jack" required [value]="leadName()" (input)="leadName.set($any($event.target).value)" />
+                </label>
+                <label>
+                  <span>Email</span>
+                  <input type="email" name="email" autocomplete="email" placeholder="you@example.com" required [value]="leadEmail()" (input)="leadEmail.set($any($event.target).value)" />
+                </label>
+                <label>
+                  <span>Phone <em>optional</em></span>
+                  <input type="tel" name="phone" autocomplete="tel" [value]="leadPhone()" (input)="leadPhone.set($any($event.target).value)" />
+                </label>
+                <label>
+                  <span>How did you hear about us? <em>optional</em></span>
+                  <select name="heard" [value]="leadHeard()" (change)="leadHeard.set($any($event.target).value)">
+                    <option value=""></option>
+                    @for (option of heardOptions; track option) {
+                      <option [value]="option">{{ option }}</option>
+                    }
+                  </select>
+                </label>
+                @if (contactError()) {
+                  <p class="q-error" role="alert">{{ contactError() }}</p>
+                }
+                <div class="q-actions">
+                  <button type="submit" class="q-primary">{{ isEventPath() ? 'Send my details' : 'Show my estimate' }}</button>
+                  <button type="button" class="q-back" (click)="back()">Back</button>
+                </div>
+                <p class="q-privacy">We only use this to reply to you. Nothing automated, no mailing lists.</p>
+              </form>
+            </section>
+          }
+
+          @case ('result') {
+            <section class="q-step q-result" aria-live="polite">
+              <p class="q-eyebrow">{{ isEventPath() ? 'Your proposal request' : 'Your guide estimate' }}</p>
+              <h2>{{ firstName() }}, here is your day at Swarling.</h2>
+
+              <div class="q-chips">
+                @for (chip of recapChips(); track chip) {
+                  <span>{{ chip }}</span>
+                }
+              </div>
+
+              @if (!isEventPath()) {
+                <div class="q-estimate">
+                  @for (line of estimateLines(); track line.label) {
+                    <div class="q-line" [class.is-off]="!lineIncluded(line)">
+                      <div class="q-line-copy">
+                        <strong>{{ line.label }}</strong>
+                        <span>{{ line.detail }}</span>
+                      </div>
+                      <div class="q-line-amount">
+                        @if (line.toggleKey) {
+                          <button
+                            type="button"
+                            class="q-toggle"
+                            [attr.aria-pressed]="lineIncluded(line)"
+                            (click)="toggleLine(line)"
+                            [attr.aria-label]="(lineIncluded(line) ? 'Remove ' : 'Add ') + line.label"
+                          >
+                            <span></span>
+                          </button>
+                        }
+                        <span>{{ line.low === line.high ? formatMoney(line.low) : formatMoney(line.low) + ' to ' + formatMoney(line.high) }}</span>
+                      </div>
+                    </div>
+                  }
+                  <div class="q-total">
+                    <span>Your guide estimate</span>
+                    <strong>
+                      {{ formatMoney(estimateTotal().low) }}{{ estimateTotal().isRange ? ' to ' + formatMoney(estimateTotal().high) : '' }}
+                    </strong>
+                  </div>
+                  @if (food() === 'undecided') {
+                    <p class="q-note">Shown with the three course breakfast. The BBQ or hog roast saves £20 a head.</p>
+                  }
+                  @if (overCapacityDay() || overCapacityEvening()) {
+                    <p class="q-note">Your numbers sit above our standard 60 day and 80 evening guests, so the team will price this personally.</p>
+                  }
+                  <p class="q-disclaimer">
+                    These figures are a guide, drawn from our 2026 to 2028 brochure. Every celebration here is quoted
+                    personally. The final price depends on your date, your numbers and the choices you make, and it
+                    comes from the team, not from a calculator.
+                  </p>
+                </div>
+              } @else {
+                <p class="q-helper">
+                  There is no set menu for {{ occasion() === 'party' ? 'parties' : 'company days' }} here, and that is
+                  the point. The team reads what you told us and replies with tailored pricing, usually within one
+                  working day. Exclusive hire includes the marquee, the fairy lit barn, the courtyard and the grounds.
+                </p>
+              }
+
+              <div class="q-strip">
+                @for (image of resultStrip(); track image) {
+                  <img [src]="image" alt="" loading="lazy" />
+                }
+              </div>
+              <p class="q-strip-caption">The day can move without leaving the grounds.</p>
+
+              <div class="q-actions q-result-actions">
+                <a class="q-primary" [href]="tourMailto()">Book a tour of the grounds</a>
+                <a class="q-secondary" href="https://www.swarlingmanor.com/weddings" target="_blank" rel="noopener">Download the full brochure</a>
+                <a class="q-secondary" href="tel:+447850974748">Or call 07850 974748</a>
+              </div>
+              <p class="q-privacy">
+                One of us will follow up personally, usually within a day.
+              </p>
+              <button type="button" class="q-back" (click)="restart()">Start over</button>
+            </section>
+          }
+        }
+      </div>
+    </div>
+  </div>
+}
