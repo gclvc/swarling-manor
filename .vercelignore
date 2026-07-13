@@ -1,0 +1,11 @@
+# Local 4K masters; the web-ready derivatives are in public/media.
+src/assets/
+
+# Local-only build and tooling data.
+node_modules/
+dist/
+.angular/
+.git/
+.vercel/
+.env*
+coverage/
