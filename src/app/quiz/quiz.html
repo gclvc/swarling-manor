@@ -19,8 +19,8 @@
       <span [style.width.%]="((stepIndex() + 1) / steps().length) * 100"></span>
     </div>
 
-    <div class="quiz-body" [class.is-full]="currentStep() === 'result' || currentStep() === 'showcase'">
-      @if (currentStep() !== 'result' && currentStep() !== 'showcase') {
+    <div class="quiz-body" [class.is-full]="currentStep() === 'result' || currentStep() === 'showcase' || currentStep() === 'tease'">
+      @if (currentStep() !== 'result' && currentStep() !== 'showcase' && currentStep() !== 'tease') {
         <figure class="quiz-visual" aria-hidden="true">
           @if (currentStep() === 'occasion' && !reduceMotion) {
             <video autoplay muted loop playsinline preload="metadata" poster="/media/video/swarling-horizontal-poster.webp">
@@ -31,6 +31,19 @@
           }
           <div class="quiz-visual-shade"></div>
         </figure>
+      }
+
+      @if (currentStep() === 'showcase' || currentStep() === 'tease') {
+        <div class="q-immersive-media" aria-hidden="true">
+          @if (currentStep() === 'showcase' && !reduceMotion) {
+            <video autoplay muted loop playsinline preload="metadata" poster="/media/video/swarling-horizontal-poster.webp">
+              <source src="/media/video/swarling-horizontal.mp4" type="video/mp4" />
+            </video>
+          } @else {
+            <img [src]="currentStep() === 'showcase' ? '/media/estate/manor-aerial.webp' : '/media/estate/coach-cottage.webp'" alt="" />
+          }
+          <div class="q-immersive-shade"></div>
+        </div>
       }
 
       <div class="quiz-panel">
@@ -97,7 +110,7 @@
           }
 
           @case ('showcase') {
-            <section class="q-step q-showcase" aria-live="polite">
+            <section class="q-step q-showcase q-immersive" aria-live="polite">
               <p class="q-eyebrow">Swarling Manor</p>
               <h2>The day can move without leaving the grounds.</h2>
               <p class="q-helper">
@@ -112,7 +125,7 @@
                 <img src="/media/estate/coach-cottage.webp" alt="Coach Cottage" loading="lazy" />
               </div>
               <div class="q-actions">
-                <button type="button" class="q-primary" (click)="next()">Keep going</button>
+                <button type="button" class="q-primary" (click)="next()">Continue</button>
                 <button type="button" class="q-back" (click)="back()">Back</button>
               </div>
             </section>
@@ -284,7 +297,7 @@
           }
 
           @case ('tease') {
-            <section class="q-step q-showcase" aria-live="polite">
+            <section class="q-step q-showcase q-immersive" aria-live="polite">
               <p class="q-eyebrow">Almost done</p>
               <h2>{{ isEventPath() ? 'Your tailored proposal is nearly ready.' : 'Your guide estimate is ready.' }}</h2>
               <div class="q-chips">
